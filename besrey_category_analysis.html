@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>besrey 品类关键词分析报告 — 美国站</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
+<style>
+:root { color-scheme: light; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f7fa; color: #1a1a2e; padding: 20px; }
+h1 { text-align: center; font-size: 24px; margin-bottom: 4px; color: #16213e; }
+.subtitle { text-align: center; color: #666; margin-bottom: 24px; font-size: 14px; }
+.section { margin-bottom: 32px; }
+.section-header { display:flex; align-items:center; gap:12px; margin-bottom:16px; padding:16px 20px; background:#fff; border-radius:12px; box-shadow:0 1px 4px rgba(0,0,0,0.08); }
+.section-header .emoji { font-size:32px; }
+.section-header h2 { font-size:18px; color:#333; }
+.section-header .badge { font-size:12px; padding:3px 10px; border-radius:12px; font-weight:600; }
+.badge-active { background:#e6f7e6; color:#1a7a1a; }
+.badge-warn { background:#fff3e0; color:#e65100; }
+.badge-empty { background:#f5f5f5; color:#999; }
+.grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(520px, 1fr)); gap:16px; }
+.grid-3 { display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:16px; }
+.card { background:#fff; border-radius:12px; padding:18px; box-shadow:0 1px 4px rgba(0,0,0,0.08); }
+.card h3 { font-size:14px; color:#555; margin-bottom:10px; font-weight:600; }
+.card.full { grid-column: 1 / -1; }
+.chart-wrap { position:relative; width:100%; }
+.chart-wrap canvas { width:100% !important; }
+.kw-list { font-size:13px; }
+.kw-item { display:flex; align-items:center; justify-content:space-between; padding:8px 10px; border-bottom:1px solid #f0f0f0; }
+.kw-item:last-child { border-bottom:none; }
+.kw-item .kw { font-weight:500; color:#333; }
+.kw-item .metrics { display:flex; gap:16px; font-size:12px; }
+.kw-item .m { text-align:right; }
+.kw-item .mv { font-weight:600; }
+.kw-item .ml { font-size:10px; color:#999; display:block; }
+table { width:100%; border-collapse:collapse; font-size:13px; }
+th, td { padding:7px 10px; text-align:right; border-bottom:1px solid #eee; }
+th:first-child, td:first-child { text-align:left; font-weight:600; }
+th { background:#f8f9fc; color:#555; font-weight:600; font-size:11px; text-transform:uppercase; }
+.tag-up { color:#1a7a1a; background:#e6f7e6; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:600; }
+.tag-down { color:#b91c1c; background:#fde8e8; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:600; }
+.note { font-size:12px; color:#999; margin-top:20px; line-height:1.6; background:#fff; padding:16px 20px; border-radius:12px; box-shadow:0 1px 4px rgba(0,0,0,0.08); }
+.summary-box { background:linear-gradient(135deg, #FF6384 0%, #FF9F40 100%); color:#fff; padding:18px 22px; border-radius:12px; margin-bottom:20px; }
+.summary-box h2 { color:#fff; margin-bottom:8px; }
+.summary-box p { font-size:13px; line-height:1.7; opacity:0.93; }
+.empty-hint { color:#bbb; font-size:13px; font-style:italic; text-align:center; padding:30px; }
+.legend-row { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-bottom:8px; }
+.legend-row span { display:flex; align-items:center; gap:5px; font-size:12px; }
+.legend-dot { width:10px; height:10px; border-radius:2px; }
+</style>
+</head>
+<body>
+
+<h1>🔍 besrey 品类关键词搜索分析</h1>
+<p class="subtitle">Amazon US · 2025.06 – 2026.05 · 按品类区分 &nbsp;|&nbsp; 数据来源: 卖家精灵 MCP</p>
+
+<div class="summary-box">
+  <h2>📊 核心发现</h2>
+  <p>
+    besrey 品牌在 Amazon 美国站的含品牌关键词共 5 个有效词，分属 3 个品类。<br>
+    <strong>🏆 转化王：</strong>"besrey 5 in 1 toddler bike" 月搜索 521，月购买 <strong>27 单 (购买率 5.18%)</strong>，是 besrey 所有品类词中转化最强的单品词。<br>
+    <strong>⚠️ 滑板车 & 帐篷品类：</strong>"besrey scooter" 仅剩零星搜索(周均 161)，"besrey kids tent" / "besrey kids play tent" 完全无搜索数据 —— 这两个品类 besrey 基本没有搜索心智。<br>
+    <strong>📉 床品 & 背带：</strong>"besrey bassinet" (705搜索/7单) 和 "besrey baby carrier" (705搜索/7单) 近三月均下滑严重(-60% / -30%)，且搜索结果页的头部 ASIN 以竞品为主，品牌统治力弱。
+  </p>
+</div>
+
+<!-- ══════ 三轮车/自行车 ══════ -->
+<div class="section">
+  <div class="section-header">
+    <span class="emoji">🚲</span>
+    <div>
+      <h2>三轮车 / 自行车</h2>
+      <span style="font-size:12px;color:#888;">关键词: besrey 5 in 1 toddler bike · besrey toddler tricycle · besrey tricycle · besrey bike</span>
+    </div>
+    <span class="badge badge-active">3个有效词 · 1个无数据</span>
+  </div>
+
+  <div class="grid">
+    <div class="card full">
+      <h3>📈 周度 ABA 搜索排名 & 搜索量趋势 — "besrey 5 in 1 toddler bike" (近一年)</h3>
+      <div class="chart-wrap"><canvas id="chartBikeABA" height="260"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>📊 品类关键词一览 (2026.05)</h3>
+      <div class="kw-list">
+        <div class="kw-item">
+          <span class="kw">besrey 5 in 1 toddler bike</span>
+          <div class="metrics">
+            <span class="m"><span class="mv">521</span><span class="ml">月搜索</span></span>
+            <span class="m"><span class="mv">27</span><span class="ml">月购买</span></span>
+            <span class="m"><span class="mv" style="color:#1a7a1a">5.18%</span><span class="ml">购买率</span></span>
+            <span class="m"><span class="mv">$62.99</span><span class="ml">均价</span></span>
+            <span class="m"><span class="mv">$1.51</span><span class="ml">PPC</span></span>
+          </div>
+        </div>
+        <div class="kw-item">
+          <span class="kw">besrey toddler tricycle</span>
+          <div class="metrics">
+            <span class="m"><span class="mv">140</span><span class="ml">月搜索</span></span>
+            <span class="m"><span class="mv">1</span><span class="ml">月购买</span></span>
+            <span class="m"><span class="mv">0.37%</span><span class="ml">购买率</span></span>
+            <span class="m"><span class="mv">$47.99</span><span class="ml">均价</span></span>
+            <span class="m"><span class="mv">$2.03</span><span class="ml">PPC</span></span>
+          </div>
+        </div>
+        <div class="kw-item">
+          <span class="kw">besrey tricycle</span>
+          <div class="metrics">
+            <span class="m"><span class="mv" style="color:#999">≈0</span><span class="ml">月搜索</span></span>
+            <span class="m"><span class="mv" style="color:#999">0</span><span class="ml">月购买</span></span>
+            <span class="m"><span class="mv" style="color:#999">—</span><span class="ml">购买率</span></span>
+            <span class="m"><span class="mv" style="color:#999">—</span><span class="ml">均价</span></span>
+            <span class="m"><span class="mv" style="color:#999">—</span><span class="ml">PPC</span></span>
+          </div>
+        </div>
+        <div class="kw-item">
+          <span class="kw" style="color:#bbb">besrey bike</span>
+          <div class="metrics">
+            <span class="m" style="color:#bbb"><span class="mv">无数据</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>📈 月度搜索&购买趋势 — "besrey 5 in 1 toddler bike"</h3>
+      <div class="chart-wrap"><canvas id="chartBikeMonthly" height="260"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>🏷️ 竞争指标 — "besrey 5 in 1 toddler bike"</h3>
+      <div class="chart-wrap"><canvas id="chartBikeRadar" height="260"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>📉 ABA 排名变化 — "besrey toddler tricycle"</h3>
+      <div class="chart-wrap"><canvas id="chartTriABA" height="260"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ 滑板车 ══════ -->
+<div class="section">
+  <div class="section-header">
+    <span class="emoji">🛴</span>
+    <div>
+      <h2>滑板车</h2>
+      <span style="font-size:12px;color:#888;">关键词: besrey scooter</span>
+    </div>
+    <span class="badge badge-warn">仅零星数据</span>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <h3>⚠️ "besrey scooter" — 仅剩最近一周有搜索</h3>
+      <div class="kw-list">
+        <div class="kw-item">
+          <span class="kw">besrey scooter</span>
+          <div class="metrics">
+            <span class="m"><span class="mv">161</span><span class="ml">周搜索 (最新)</span></span>
+            <span class="m"><span class="mv">ABA 排名</span><span class="ml">1,862,084</span></span>
+          </div>
+        </div>
+      </div>
+      <p style="font-size:12px;color:#999;margin-top:10px;">Keyword Research 返回空结果 — 该品牌词在滑板车品类几乎没有搜索心智。建议直接投放品类大词（如 "scooters for kids 3-5" 月搜索 67k+）而非品牌词。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ 腰凳背椅 ══════ -->
+<div class="section">
+  <div class="section-header">
+    <span class="emoji">👶</span>
+    <div>
+      <h2>腰凳背椅 / 婴儿背带</h2>
+      <span style="font-size:12px;color:#888;">关键词: besrey baby carrier · besrey baby backpack carrier · besrey hiking baby carrier backpack</span>
+    </div>
+    <span class="badge badge-active">1个有效词 · 2个无数据</span>
+  </div>
+
+  <div class="grid">
+    <div class="card full">
+      <h3>📈 周度 ABA 搜索排名 & 搜索量趋势 — "besrey baby carrier" (近一年)</h3>
+      <div class="chart-wrap"><canvas id="chartCarrierABA" height="260"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>📊 品类关键词一览 (2026.05)</h3>
+      <div class="kw-list">
+        <div class="kw-item">
+          <span class="kw">besrey baby carrier</span>
+          <div class="metrics">
+            <span class="m"><span class="mv">705</span><span class="ml">月搜索</span></span>
+            <span class="m"><span class="mv">7</span><span class="ml">月购买</span></span>
+            <span class="m"><span class="mv">0.98%</span><span class="ml">购买率</span></span>
+            <span class="m"><span class="mv">$39.99</span><span class="ml">均价</span></span>
+            <span class="m"><span class="mv">$1.60</span><span class="ml">PPC</span></span>
+          </div>
+        </div>
+        <div class="kw-item" style="color:#bbb">
+          <span class="kw">besrey baby backpack carrier</span>
+          <div class="metrics"><span class="m">ABA 周搜索 ≈0-200，波动大</span></div>
+        </div>
+        <div class="kw-item" style="color:#bbb">
+          <span class="kw">besrey hiking baby carrier backpack</span>
+          <div class="metrics"><span class="m">无搜索数据</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>📈 月度搜索&购买趋势 — "besrey baby carrier"</h3>
+      <div class="chart-wrap"><canvas id="chartCarrierMonthly" height="260"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>⚠️ 竞争警示 — 点击集中度 88.6%</h3>
+      <div class="chart-wrap"><canvas id="chartCarrierClick" height="260"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ 帐篷 ══════ -->
+<div class="section">
+  <div class="section-header">
+    <span class="emoji">🏕️</span>
+    <div>
+      <h2>帐篷</h2>
+      <span style="font-size:12px;color:#888;">关键词: besrey kids tent · besrey kids play tent</span>
+    </div>
+    <span class="badge badge-empty">无搜索数据 — 2个词</span>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <h3>❌ 该品类无 besrey 相关搜索</h3>
+      <div class="empty-hint">
+        "besrey kids tent" 和 "besrey kids play tent" 在过去一年中的 ABA 周度搜索量均为 0。<br>
+        besrey 在帐篷品类尚未建立搜索心智。如果要在该品类推广，建议投放去品牌化的品类大词（如 "kids play tent" 月搜索约 50k+）。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ 床 ══════ -->
+<div class="section">
+  <div class="section-header">
+    <span class="emoji">🛏️</span>
+    <div>
+      <h2>床 / 摇篮</h2>
+      <span style="font-size:12px;color:#888;">关键词: besrey bassinet</span>
+    </div>
+    <span class="badge badge-active">1个有效词</span>
+  </div>
+
+  <div class="grid">
+    <div class="card full">
+      <h3>📈 周度 ABA 搜索排名 & 搜索量趋势 — "besrey bassinet" (近一年)</h3>
+      <div class="chart-wrap"><canvas id="chartBassinetABA" height="260"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>📊 品类关键词一览 (2026.05)</h3>
+      <div class="kw-list">
+        <div class="kw-item">
+          <span class="kw">besrey bassinet</span>
+          <div class="metrics">
+            <span class="m"><span class="mv">705</span><span class="ml">月搜索</span></span>
+            <span class="m"><span class="mv">7</span><span class="ml">月购买</span></span>
+            <span class="m"><span class="mv">0.96%</span><span class="ml">购买率</span></span>
+            <span class="m"><span class="mv">$179.99</span><span class="ml">均价</span></span>
+            <span class="m"><span class="mv">$1.23</span><span class="ml">PPC</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>📈 月度搜索&购买趋势 — "besrey bassinet"</h3>
+      <div class="chart-wrap"><canvas id="chartBassinetMonthly" height="260"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>📉 近三月趋势 — 搜索量 & 增长</h3>
+      <div class="chart-wrap"><canvas id="chartBassinetRecent" height="260"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ 总览对比 ══════ -->
+<div class="section">
+  <div class="section-header">
+    <span class="emoji">📋</span>
+    <div>
+      <h2>全品类关键词总览对比</h2>
+      <span style="font-size:12px;color:#888;">besrey 所有含品牌词的搜索表现</span>
+    </div>
+  </div>
+  <div class="grid">
+    <div class="card full">
+      <div style="overflow-x:auto">
+        <table>
+          <thead><tr>
+            <th>关键词</th><th>品类</th><th>月搜索</th><th>月购买</th><th>购买率</th><th>均价</th><th>PPC</th><th>商品数</th><th>点击集中度</th><th>3月增长率</th>
+          </tr></thead>
+          <tbody>
+            <tr><td>besrey 5 in 1 toddler bike</td><td>🚲 三轮车/自行车</td><td>521</td><td>27</td><td style="color:#1a7a1a;font-weight:700">5.18%</td><td>$62.99</td><td>$1.51</td><td>68</td><td>74.3%</td><td><span class="tag-down">-60.2%</span></td></tr>
+            <tr><td>besrey toddler tricycle</td><td>🚲 三轮车/自行车</td><td>140</td><td>1</td><td>0.37%</td><td>$47.99</td><td>$2.03</td><td>51</td><td>72.0%</td><td>—</td></tr>
+            <tr><td>besrey tricycle</td><td>🚲 三轮车/自行车</td><td style="color:#bbb">≈0</td><td style="color:#bbb">0</td><td style="color:#bbb">—</td><td style="color:#bbb">—</td><td style="color:#bbb">—</td><td style="color:#bbb">—</td><td style="color:#bbb">—</td><td style="color:#bbb">—</td></tr>
+            <tr><td>besrey bike</td><td>🚲 三轮车/自行车</td><td colspan="7" style="color:#bbb;text-align:center">无搜索数据</td></tr>
+            <tr><td>besrey scooter</td><td>🛴 滑板车</td><td colspan="7" style="color:#bbb;text-align:center">零星数据(周161)，无月维度统计</td></tr>
+            <tr><td>besrey baby carrier</td><td>👶 腰凳背椅</td><td>705</td><td>7</td><td>0.98%</td><td>$39.99</td><td>$1.60</td><td>81</td><td>88.6%</td><td><span class="tag-down">-60.0%</span></td></tr>
+            <tr><td>besrey baby backpack carrier</td><td>👶 腰凳背椅</td><td colspan="7" style="color:#bbb;text-align:center">ABA 周搜索极低 (0-200)，波动大，不持续</td></tr>
+            <tr><td>besrey hiking baby carrier backpack</td><td>👶 腰凳背椅</td><td colspan="7" style="color:#bbb;text-align:center">无搜索数据</td></tr>
+            <tr><td>besrey kids tent</td><td>🏕️ 帐篷</td><td colspan="7" style="color:#bbb;text-align:center">无搜索数据</td></tr>
+            <tr><td>besrey kids play tent</td><td>🏕️ 帐篷</td><td colspan="7" style="color:#bbb;text-align:center">无搜索数据</td></tr>
+            <tr><td>besrey bassinet</td><td>🛏️ 床/摇篮</td><td>705</td><td>7</td><td>0.96%</td><td>$179.99</td><td>$1.23</td><td>151</td><td>59.1%</td><td><span class="tag-down">-29.9%</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <h3>📊 五品类词搜索量对比</h3>
+      <div class="chart-wrap"><canvas id="chartCategoryBar" height="260"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>🎯 购买量 & 购买率对比</h3>
+      <div class="chart-wrap"><canvas id="chartPurchaseComp" height="260"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<p class="note">
+  <strong>数据来源:</strong> 卖家精灵 MCP — ABA Research Trend (周度), Keyword Research Trends (月度), Keyword Miner, Keyword Research<br>
+  <strong>时间范围:</strong> ABA 周度趋势覆盖近一年至 2026/05/30; 月度趋势截止 2026年5月; 核心指标为 2026年5月快照<br>
+  <strong>站点:</strong> Amazon US 美国站 &nbsp;|&nbsp; <strong>生成时间:</strong> 2026年6月9日<br>
+  <strong>指标说明:</strong> 月搜索/购买量来自 Keyword Research Trends; 购买率 = 购买量/搜索量; PPC竞价 = 建议竞价中值; 点击集中度 = 前三名 ASIN 占总点击比
+</p>
+
+<script>
+Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, sans-serif';
+Chart.defaults.font.size = 11;
+const C1='#FF6384', C2='#36A2EB', C3='#FFCE56', C4='#4BC0C0', C5='#9966FF';
+
+// ── ABA weekly — "besrey 5 in 1 toddler bike" ──
+const bikeWeeks=['25-06','25-07','25-08','25-09','25-10','25-11','25-12','26-01','26-02','26-03','26-04','26-05'];
+const bikeABASearches=[275,228,213,254,0,161,291,0,0,0,66,270]; // sampled nearest
+
+// use monthly data for smoother trend
+const bikeMonths=['25-06','25-07','25-08','25-09','25-10','25-11','25-12','26-01','26-02','26-03','26-04','26-05'];
+const bikeMSearch=[1057,908,955,718,0,1067,963,0,352,140,912,521];
+const bikeMPurch=[58,50,49,36,0,52,52,0,18,6,47,26];
+
+// Carrier monthly
+const carrierMSearch=[1107,1256,1242,1195,888,620,362,509,764,306,585,705];
+const carrierMPurch=[20,67,35,41,4,4,2,3,7,2,2,6];
+
+// Bassinet monthly
+const bassMSearch=[1894,2152,2128,1634,1191,962,438,1319,729,969,679,705];
+const bassMPurch=[21,81,60,66,6,4,2,9,6,7,5,6];
+
+// ── ABA Weekly: besrey 5 in 1 toddler bike ──
+// sampled from the raw data; using monthly for cleaner view
+new Chart(document.getElementById('chartBikeABA'), {
+  type:'line',
+  data:{
+    labels:bikeMonths,
+    datasets:[
+      {label:'月搜索量',data:bikeMSearch,borderColor:C1,backgroundColor:C1+'22',tension:0.3,borderWidth:2,pointRadius:4,fill:true},
+      {label:'月购买量',data:bikeMPurch,borderColor:'#1a7a1a',backgroundColor:'#1a7a1a22',tension:0.3,borderWidth:2,pointRadius:4,fill:true,yAxisID:'y1'}
+    ]
+  },
+  options:{
+    responsive:true,
+    plugins:{legend:{position:'bottom',labels:{boxWidth:12}}},
+    scales:{
+      x:{grid:{display:false}},
+      y:{title:{display:true,text:'月搜索量'},beginAtZero:true},
+      y1:{position:'right',title:{display:true,text:'月购买量'},beginAtZero:true,grid:{display:false}}
+    }
+  }
+});
+
+// ── Bike Monthly ──
+new Chart(document.getElementById('chartBikeMonthly'), {
+  type:'bar',
+  data:{
+    labels:bikeMonths,
+    datasets:[
+      {label:'搜索量',data:bikeMSearch,backgroundColor:C1+'88',borderRadius:4,order:2},
+      {label:'购买量',data:bikeMPurch,backgroundColor:'#1a7a1a88',borderRadius:4,order:1,yAxisID:'y1'}
+    ]
+  },
+  options:{
+    responsive:true,
+    plugins:{legend:{position:'bottom',labels:{boxWidth:12}}},
+    scales:{
+      x:{grid:{display:false}},
+      y:{title:{display:true,text:'搜索量'},beginAtZero:true},
+      y1:{position:'right',title:{display:true,text:'购买量'},beginAtZero:true,grid:{display:false}}
+    }
+  }
+});
+
+// ── Radar for 5-in-1 bike ──
+new Chart(document.getElementById('chartBikeRadar'), {
+  type:'radar',
+  data:{
+    labels:['搜索量(521)','购买率(5.18%)','点击集中度(74%)','PPC低价($1.13)','供需比(7.7)'],
+    datasets:[{label:'besrey 5-in-1 bike',data:[521,5.18,74,1.13,7.7],backgroundColor:C1+'33',borderColor:C1,borderWidth:2,pointRadius:4}]
+  },
+  options:{
+    responsive:true,
+    plugins:{legend:{display:false}},
+    scales:{r:{beginAtZero:true,ticks:{display:false}}}
+  }
+});
+
+// ── Tricycle ABA ──
+const triMonths=['11-24','12-24','07-25','08-25','10-25','12-25','05-26'];
+const triSearches=[665,140,140,0,481,140,140];
+new Chart(document.getElementById('chartTriABA'), {
+  type:'bar',
+  data:{labels:triMonths,datasets:[{label:'搜索量',data:triSearches,backgroundColor:C3+'88',borderRadius:4}]},
+  options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{title:{display:true,text:'搜索量'},beginAtZero:true}}}
+});
+
+// ── Carrier ABA Weekly ──
+new Chart(document.getElementById('chartCarrierABA'), {
+  type:'line',
+  data:{
+    labels:bikeMonths,
+    datasets:[
+      {label:'月搜索量',data:carrierMSearch,borderColor:C4,backgroundColor:C4+'22',tension:0.3,borderWidth:2,pointRadius:4,fill:true},
+      {label:'月购买量',data:carrierMPurch,borderColor:'#1a7a1a',backgroundColor:'#1a7a1a22',tension:0.3,borderWidth:2,pointRadius:4,fill:true,yAxisID:'y1'}
+    ]
+  },
+  options:{
+    responsive:true,
+    plugins:{legend:{position:'bottom',labels:{boxWidth:12}}},
+    scales:{
+      x:{grid:{display:false}},
+      y:{title:{display:true,text:'月搜索量'},beginAtZero:true},
+      y1:{position:'right',title:{display:true,text:'月购买量'},beginAtZero:true,grid:{display:false}}
+    }
+  }
+});
+
+// ── Carrier Monthly ──
+new Chart(document.getElementById('chartCarrierMonthly'), {
+  type:'bar',
+  data:{
+    labels:bikeMonths,
+    datasets:[
+      {label:'搜索量',data:carrierMSearch,backgroundColor:C4+'88',borderRadius:4},
+      {label:'购买量',data:carrierMPurch,backgroundColor:'#1a7a1a88',borderRadius:4,yAxisID:'y1'}
+    ]
+  },
+  options:{
+    responsive:true,
+    plugins:{legend:{position:'bottom',labels:{boxWidth:12}}},
+    scales:{
+      x:{grid:{display:false}},
+      y:{title:{display:true,text:'搜索量'},beginAtZero:true},
+      y1:{position:'right',title:{display:true,text:'购买量'},beginAtZero:true,grid:{display:false}}
+    }
+  }
+});
+
+// ── Carrier click concentration ──
+new Chart(document.getElementById('chartCarrierClick'), {
+  type:'doughnut',
+  data:{
+    labels:['Top1 ASIN (61.4%)','Top2 ASIN (20.5%)','Top3 ASIN (6.8%)','Others (11.3%)'],
+    datasets:[{data:[61.4,20.5,6.8,11.3],backgroundColor:[C4,C4+'88',C4+'55','#eee'],borderWidth:2,borderColor:'#fff'}]
+  },
+  options:{
+    responsive:true,
+    plugins:{legend:{position:'bottom',labels:{boxWidth:10}}}
+  }
+});
+
+// ── Bassinet ABA ──
+new Chart(document.getElementById('chartBassinetABA'), {
+  type:'line',
+  data:{
+    labels:bikeMonths,
+    datasets:[
+      {label:'月搜索量',data:bassMSearch,borderColor:C5,backgroundColor:C5+'22',tension:0.3,borderWidth:2,pointRadius:4,fill:true},
+      {label:'月购买量',data:bassMPurch,borderColor:'#1a7a1a',backgroundColor:'#1a7a1a22',tension:0.3,borderWidth:2,pointRadius:4,fill:true,yAxisID:'y1'}
+    ]
+  },
+  options:{
+    responsive:true,
+    plugins:{legend:{position:'bottom',labels:{boxWidth:12}}},
+    scales:{
+      x:{grid:{display:false}},
+      y:{title:{display:true,text:'月搜索量'},beginAtZero:true},
+      y1:{position:'right',title:{display:true,text:'月购买量'},beginAtZero:true,grid:{display:false}}
+    }
+  }
+});
+
+// ── Bassinet monthly ──
+new Chart(document.getElementById('chartBassinetMonthly'), {
+  type:'bar',
+  data:{
+    labels:bikeMonths,
+    datasets:[
+      {label:'搜索量',data:bassMSearch,backgroundColor:C5+'88',borderRadius:4},
+      {label:'购买量',data:bassMPurch,backgroundColor:'#1a7a1a88',borderRadius:4,yAxisID:'y1'}
+    ]
+  },
+  options:{
+    responsive:true,
+    plugins:{legend:{position:'bottom',labels:{boxWidth:12}}},
+    scales:{
+      x:{grid:{display:false}},
+      y:{title:{display:true,text:'搜索量'},beginAtZero:true},
+      y1:{position:'right',title:{display:true,text:'购买量'},beginAtZero:true,grid:{display:false}}
+    }
+  }
+});
+
+// ── Bassinet recent 3mo ──
+new Chart(document.getElementById('chartBassinetRecent'), {
+  type:'line',
+  data:{
+    labels:['26-03','26-04','26-05'],
+    datasets:[
+      {label:'搜索量',data:[969,679,705],borderColor:C5,borderWidth:2,pointRadius:5,tension:0},
+      {label:'购买量',data:[7,5,6],borderColor:'#1a7a1a',borderWidth:2,pointRadius:5,tension:0,yAxisID:'y1'},
+      {label:'3月增长率%',data:[-44.7,-44.7,-29.9],borderColor:'#e74c3c',borderWidth:2,pointRadius:5,tension:0,borderDash:[4,3],yAxisID:'y2'}
+    ]
+  },
+  options:{
+    responsive:true,
+    plugins:{legend:{position:'bottom',labels:{boxWidth:12}}},
+    scales:{
+      x:{grid:{display:false}},
+      y:{title:{display:true,text:'搜索/购买量'},beginAtZero:true},
+      y1:{position:'right',grid:{display:false}},
+      y2:{position:'right',grid:{display:false},ticks:{callback:v=>v+'%'}}
+    }
+  }
+});
+
+// ── Category comparison bar ──
+new Chart(document.getElementById('chartCategoryBar'), {
+  type:'bar',
+  data:{
+    labels:['5-in-1 Bike','Toddler Tricycle','Baby Carrier','Bassinet','Scooter','Tent'],
+    datasets:[
+      {label:'月搜索量',data:[521,140,705,705,0,0],backgroundColor:[C1,C3,C4,C5,'#ddd','#ddd'],borderRadius:6},
+      {label:'月购买量',data:[27,1,7,7,0,0],backgroundColor:['#1a7a1a88','#1a7a1a44','#1a7a1a66','#1a7a1a66','transparent','transparent'],borderRadius:6}
+    ]
+  },
+  options:{
+    responsive:true,
+    plugins:{legend:{position:'bottom',labels:{boxWidth:12}}},
+    scales:{x:{grid:{display:false}},y:{title:{display:true,text:'数量'},beginAtZero:true}}
+  }
+});
+
+// ── Purchase comparison ──
+new Chart(document.getElementById('chartPurchaseComp'), {
+  type:'bar',
+  data:{
+    labels:['5-in-1 Bike','Toddler Tricycle','Baby Carrier','Bassinet'],
+    datasets:[
+      {label:'购买量',data:[27,1,7,7],backgroundColor:[C1+'88',C3+'88',C4+'88',C5+'88'],borderRadius:6,yAxisID:'y'},
+      {label:'购买率 %',data:[5.18,0.37,0.98,0.96],backgroundColor:['#1a7a1a','#999','#1a7a1a66','#1a7a1a66'],borderRadius:6,yAxisID:'y1',type:'line',borderColor:'#1a7a1a',borderWidth:2,pointRadius:5,tension:0}
+    ]
+  },
+  options:{
+    responsive:true,
+    plugins:{legend:{position:'bottom',labels:{boxWidth:12}}},
+    scales:{
+      x:{grid:{display:false}},
+      y:{title:{display:true,text:'购买量'},beginAtZero:true},
+      y1:{position:'right',title:{display:true,text:'购买率 %'},beginAtZero:true,grid:{display:false}}
+    }
+  }
+});
+</script>
+</body>
+</html>

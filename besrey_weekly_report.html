@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>besrey 品类关键词周度分析报告 — Amazon US</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
+<style>
+:root{color-scheme:light}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f7fa;color:#1a1a2e;padding:20px}
+h1{text-align:center;font-size:24px;margin-bottom:4px;color:#16213e}
+.subtitle{text-align:center;color:#666;margin-bottom:24px;font-size:14px}
+.section{margin-bottom:28px}
+.sec-hdr{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding:14px 18px;background:#fff;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,0.06)}
+.sec-hdr .emoji{font-size:28px}
+.sec-hdr h2{font-size:17px;color:#333}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(500px,1fr));gap:14px}
+.card{background:#fff;border-radius:12px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,0.06)}
+.card h3{font-size:14px;color:#555;margin-bottom:10px;font-weight:600}
+.card.full{grid-column:1/-1}
+.chart-wrap{position:relative;width:100%}
+.chart-wrap canvas{width:100%!important}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{padding:6px 8px;text-align:right;border-bottom:1px solid #eee}
+th:first-child,td:first-child{text-align:left;font-weight:600}
+th{background:#f8f9fc;color:#555;font-weight:600;font-size:11px}
+.tag-up{color:#1a7a1a;background:#e6f7e6;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:600}
+.tag-down{color:#b91c1c;background:#fde8e8;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:600}
+.note{font-size:12px;color:#999;margin-top:20px;line-height:1.6;background:#fff;padding:14px 18px;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,0.06)}
+.insight{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;padding:16px 20px;border-radius:12px;margin-bottom:18px}
+.insight h2{color:#fff;margin-bottom:8px}
+.insight p{font-size:13px;line-height:1.7;opacity:0.93}
+.badge{font-size:11px;padding:3px 8px;border-radius:10px;font-weight:600;display:inline-block}
+.badge-good{background:#e6f7e6;color:#1a7a1a}
+.badge-warn{background:#fff3e0;color:#e65100}
+.badge-info{background:#e3f2fd;color:#1565c0}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.prod-card{border:1px solid #e0e0e0;border-radius:8px;padding:12px;margin-bottom:8px}
+.prod-card .pn{font-weight:600;font-size:13px;color:#333}
+.prod-card .pm{font-size:12px;color:#666;margin-top:4px;display:flex;gap:14px;flex-wrap:wrap}
+@media(max-width:768px){.two-col{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<h1>📊 besrey 品类关键词 · 周度搜索分析</h1>
+<p class="subtitle">Amazon US · 近52周 (2025.06 – 2026.05) · 按品类分面板 &nbsp;|&nbsp; 数据: 卖家精灵 MCP</p>
+
+<div class="insight">
+  <h2>🔑 核心发现：品牌词搜索量 ≠ 产品销量</h2>
+  <p>
+    <strong>🛴 滑板车：</strong>"besrey scooter" 52周仅1周有搜索(161次)。但产品月销 <b>3,595-4,163件</b>，月收入 <b>$251k-$291k</b>，BSR #6。流量来源是品类大词 "scooter"(占19.2%)和 "kids scooter"(占3.4%)。<br>
+    <strong>🏕️ 帐篷：</strong>"besrey kids tent" / "besrey kids play tent" 52周搜索全部为 0。但产品月销 <b>929-1,014件</b>，月收入 <b>$55k-$64k</b>，Amazon's Choice，评分 4.6⭐。流量来源是品类大词 "kids tent"(月搜索 45k+) 和 "play tent"(月搜索 24k+)。<br>
+    <strong>🚲 三轮车：</strong>"besrey 5 in 1 toddler bike" 周均搜索 200-300，购买率 5.18%，是转化最强品牌词。但 2026年1-3月频繁断档归零。<br>
+    <strong>👶 背带 & 🛏️ 摇篮：</strong>品牌词搜索量相当(周均100-200)，转化偏低(~1%)，竞品 ASIN 占比高。
+  </p>
+</div>
+
+<!-- ═══════════ 三轮车/自行车 ═══════════ -->
+<div class="section">
+  <div class="sec-hdr">
+    <span class="emoji">🚲</span><div><h2>三轮车/自行车 — "besrey 5 in 1 toddler bike" (核心转化词)</h2></div>
+  </div>
+  <div class="grid">
+    <div class="card full">
+      <h3>📈 周度 ABA 搜索量 (近44周，含缺数据周)</h3>
+      <div class="chart-wrap"><canvas id="chartBikeWeekly" height="260"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>📊 周度明细 (最近12周)</h3>
+      <div style="overflow-x:auto"><table id="bikeTable"></table></div>
+    </div>
+    <div class="card">
+      <h3>📉 "besrey toddler tricycle" 周度 (零星出现)</h3>
+      <div class="chart-wrap"><canvas id="chartTriWeekly" height="220"></canvas></div>
+      <p style="font-size:11px;color:#999;margin-top:4px">52周中仅2-3周有搜索数据（2025-12-27: 140, 2026-05-23: 202），其余全部为 0。"besrey tricycle" / "besrey bike" 完全无数据。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ 滑板车 ═══════════ -->
+<div class="section">
+  <div class="sec-hdr">
+    <span class="emoji">🛴</span><div><h2>滑板车 — "besrey scooter" 品牌词 vs 产品流量真相</h2></div>
+  </div>
+  <div class="two-col">
+    <div class="card">
+      <h3>📉 "besrey scooter" ABA 周度搜索 (52周)</h3>
+      <div class="chart-wrap"><canvas id="chartScooterABA" height="220"></canvas></div>
+      <p style="font-size:11px;color:#999;margin-top:8px">52周中仅 2026-05-30 这一周有搜索数据（161次），其余全部为 0。</p>
+    </div>
+    <div class="card">
+      <h3>🏆 但产品实际销售表现极强</h3>
+      <div class="prod-card">
+        <div class="pn">Besrey Kick Scooter (Parent: B0BCK39F2W, 11变体)</div>
+        <div class="pm">
+          <span>月销量 <b style="color:#1a7a1a">3,595–4,163 件</b></span>
+          <span>月收入 <b style="color:#1a7a1a">$251k–$291k</b></span>
+          <span>评分 <b>4.8⭐</b> (3,435+)</span>
+        </div>
+        <div class="pm">
+          <span>Kick Scooter BSR <b>#6</b></span>
+          <span class="badge badge-good">Amazon's Choice</span>
+          <span class="badge badge-info">FBA</span>
+        </div>
+      </div>
+      <p style="font-size:12px;color:#666;margin-top:10px;line-height:1.6">
+        <strong>流量来源（B0BPXRVWYK 蓝色变体）：</strong><br>
+        🥇 <b>"scooter"</b> — 占流量 19.2%，自然#55，广告#9，月搜索 203k<br>
+        🥈 <b>"kids scooter"</b> — 占流量 3.4%，自然#8，广告#13，月搜索 50k<br>
+        💡 消费者搜品类词看到 besrey，不搜品牌词。
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ 腰凳背椅 ═══════════ -->
+<div class="section">
+  <div class="sec-hdr">
+    <span class="emoji">👶</span><div><h2>腰凳背椅 — "besrey baby carrier"</h2></div>
+  </div>
+  <div class="grid">
+    <div class="card full">
+      <h3>📈 周度 ABA 搜索量 (近44周)</h3>
+      <div class="chart-wrap"><canvas id="chartCarrierWeekly" height="260"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ 帐篷 ═══════════ -->
+<div class="section">
+  <div class="sec-hdr">
+    <span class="emoji">🏕️</span><div><h2>帐篷 — "besrey kids tent" / "besrey kids play tent" 品牌词 vs 产品流量真相</h2></div>
+  </div>
+  <div class="two-col">
+    <div class="card">
+      <h3>❌ 品牌词 ABA 周度搜索 — 全年为 0</h3>
+      <div class="chart-wrap"><canvas id="chartTentABA" height="220"></canvas></div>
+      <p style="font-size:11px;color:#999;margin-top:8px">"besrey kids tent" 和 "besrey kids play tent" 52周搜索量全部为 0。Keyword Research 也返回空。</p>
+    </div>
+    <div class="card">
+      <h3>🏆 但产品实际销售表现也很好</h3>
+      <div class="prod-card">
+        <div class="pn">besrey Kids Play Tent 2-in-1 (Parent: B0D4969MK9, 8变体)</div>
+        <div class="pm">
+          <span>月销量 <b style="color:#1a7a1a">929–1,014 件</b></span>
+          <span>月收入 <b style="color:#1a7a1a">$55k–$64k</b></span>
+          <span>评分 <b>4.6⭐</b> (2,030+)</span>
+        </div>
+        <div class="pm">
+          <span>Play Tents BSR <b>#24</b></span>
+          <span class="badge badge-good">Amazon's Choice</span>
+          <span class="badge badge-info">FBA</span>
+        </div>
+      </div>
+      <div class="prod-card">
+        <div class="pn">besrey Teepee Tent (Parent: B0BV6TQ787, 5变体)</div>
+        <div class="pm">
+          <span>月销量 <b>334 件</b></span>
+          <span>月收入 <b>$20k</b></span>
+          <span>评分 <b>4.4⭐</b> (573)</span>
+        </div>
+      </div>
+      <p style="font-size:12px;color:#666;margin-top:10px;line-height:1.6">
+        <strong>品类大词（besrey 未设立品牌词的流量来源）：</strong><br>
+        🥇 <b>"kids tent"</b> — 月搜索 45,814，购买率 0.46%，PPC $0.81，2,030 商品<br>
+        🥈 <b>"play tent"</b> — 月搜索 23,851，购买率 0.37%，PPC $0.85，6,305 商品<br>
+        💡 和滑板车一样——产品靠品类词获得曝光和销售，品牌词无搜索量。
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ 床/摇篮 ═══════════ -->
+<div class="section">
+  <div class="sec-hdr">
+    <span class="emoji">🛏️</span><div><h2>床/摇篮 — "besrey bassinet"</h2></div>
+  </div>
+  <div class="grid">
+    <div class="card full">
+      <h3>📈 周度 ABA 搜索量 (近44周)</h3>
+      <div class="chart-wrap"><canvas id="chartBassinetWeekly" height="260"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ 五品类总览 ═══════════ -->
+<div class="section">
+  <div class="sec-hdr">
+    <span class="emoji">📋</span><div><h2>全品类品牌词周度搜索量叠加 & 产品销量对比</h2></div>
+  </div>
+  <div class="grid">
+    <div class="card full">
+      <h3>🔵 三个有效品牌词 — 周度搜索量走势叠加</h3>
+      <div class="chart-wrap"><canvas id="chartAllWeekly" height="260"></canvas></div>
+      <p style="font-size:11px;color:#999;margin-top:4px">scooter 和 tent 品牌词全年无搜索未纳入。仅 "5-in-1 bike"、"baby carrier"、"bassinet" 三条线。</p>
+    </div>
+    <div class="card full">
+      <h3>📊 全品类总览表 — 品牌词 vs 产品销量</h3>
+      <div style="overflow-x:auto"><table>
+        <thead><tr><th>品类</th><th>品牌词</th><th>品牌词月搜索</th><th>品牌词月购买</th><th>品牌词购买率</th><th>产品月销量</th><th>产品月收入</th><th>产品评分</th><th>BSR排名</th><th>流量来源</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>🚲 三轮车</td><td>besrey 5 in 1 toddler bike</td><td>521</td><td>27</td><td style="color:#1a7a1a;font-weight:700">5.18%</td><td style="color:#999">—</td><td style="color:#999">—</td><td>4.5⭐(8.6k)</td><td style="color:#999">—</td><td>品牌词自驱动</td>
+          </tr>
+          <tr>
+            <td>🛴 滑板车</td><td>besrey scooter</td><td style="color:#bbb">≈0 (品牌词)</td><td style="color:#bbb">0</td><td style="color:#bbb">—</td><td style="color:#1a7a1a;font-weight:700">3,595-4,163</td><td style="color:#1a7a1a;font-weight:700">$251k-291k</td><td>4.8⭐(3.4k)</td><td>Kick Scooter #6</td><td>"scooter" + "kids scooter"</td>
+          </tr>
+          <tr>
+            <td>🏕️ 帐篷</td><td>besrey kids tent</td><td style="color:#bbb">0 (品牌词)</td><td style="color:#bbb">0</td><td style="color:#bbb">—</td><td style="color:#1a7a1a;font-weight:700">929-1,014</td><td style="color:#1a7a1a;font-weight:700">$55k-64k</td><td>4.6⭐(2.0k)</td><td>Play Tents #24</td><td>"kids tent" + "play tent"</td>
+          </tr>
+          <tr>
+            <td>👶 背带</td><td>besrey baby carrier</td><td>705</td><td>7</td><td>0.98%</td><td style="color:#999">—</td><td style="color:#999">—</td><td>4.5⭐(444)</td><td style="color:#999">—</td><td>品牌词为主</td>
+          </tr>
+          <tr>
+            <td>🛏️ 摇篮</td><td>besrey bassinet</td><td>705</td><td>7</td><td>0.96%</td><td style="color:#999">—</td><td style="color:#999">—</td><td>4.5⭐(266)</td><td style="color:#999">—</td><td>品牌词为主</td>
+          </tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+</div>
+
+<p class="note">
+  <strong>数据来源:</strong> 卖家精灵 MCP — ABA Research Trend (周度) · Keyword Research Trends (月度) · Competitor Lookup · Traffic Keyword<br>
+  <strong>时间范围:</strong> ABA 周度覆盖 2025/08/02 至 2026/05/30 (44周) · 产品销量为 2026年5月快照 · 品牌词月搜索为 2026.05<br>
+  <strong>站点:</strong> Amazon US · <strong>生成时间:</strong> 2026/06/09<br>
+  <strong>关键结论:</strong> besrey 的滑板车和帐篷品类完全靠品类大词驱动销售，品牌词无搜索量——这说明产品 Listing 和广告在品类词上的竞争力强，但品牌认知度还没建立。三轮车的 "5-in-1 toddler bike" 是唯一带得动品牌搜索的产品词。
+</p>
+
+<script>
+Chart.defaults.font.family='-apple-system,BlinkMacSystemFont,sans-serif';
+Chart.defaults.font.size=11;
+
+const C1='#FF6384',C2='#36A2EB',C3='#FFCE56',C4='#4BC0C0',C5='#9966FF';
+
+// ── Bike weekly ──
+const bikeRaw = [
+  {l:'25-08-02',s:202},{l:'25-08-09',s:234},{l:'25-08-16',s:222},{l:'25-08-23',s:161},{l:'25-08-30',s:166},
+  {l:'25-09-06',s:254},{l:'25-09-13',s:187},{l:'25-09-20',s:0},{l:'25-09-27',s:0},{l:'25-10-04',s:0},
+  {l:'25-10-11',s:0},{l:'25-10-18',s:0},{l:'25-10-25',s:0},{l:'25-11-01',s:161},{l:'25-11-08',s:161},
+  {l:'25-11-15',s:208},{l:'25-11-22',s:234},{l:'25-11-29',s:260},{l:'25-12-06',s:291},{l:'25-12-13',s:239},
+  {l:'25-12-20',s:223},{l:'25-12-27',s:202},{l:'26-01-03',s:0},{l:'26-01-10',s:0},{l:'26-01-17',s:0},
+  {l:'26-01-24',s:0},{l:'26-01-31',s:0},{l:'26-02-07',s:0},{l:'26-02-14',s:0},{l:'26-02-21',s:0},
+  {l:'26-02-28',s:0},{l:'26-03-07',s:0},{l:'26-03-14',s:0},{l:'26-03-21',s:0},{l:'26-03-28',s:197},
+  {l:'26-04-04',s:161},{l:'26-04-11',s:213},{l:'26-04-18',s:176},{l:'26-04-25',s:66},{l:'26-05-02',s:173},
+  {l:'26-05-09',s:161},{l:'26-05-16',s:105},{l:'26-05-23',s:270},{l:'26-05-30',s:161}
+];
+const bikeW=bikeRaw.map(d=>d.l), bikeS=bikeRaw.map(d=>d.s);
+
+// ── Carrier weekly ──
+const carrRaw = [
+  {l:'25-08-02',s:267},{l:'25-08-09',s:239},{l:'25-08-16',s:249},{l:'25-08-23',s:291},{l:'25-08-30',s:249},
+  {l:'25-09-06',s:254},{l:'25-09-13',s:234},{l:'25-09-20',s:270},{l:'25-09-27',s:244},{l:'25-10-04',s:213},
+  {l:'25-10-11',s:162},{l:'25-10-18',s:161},{l:'25-10-25',s:223},{l:'25-11-01',s:202},{l:'25-11-08',s:234},
+  {l:'25-11-15',s:166},{l:'25-11-22',s:136},{l:'25-11-29',s:0},{l:'25-12-06',s:0},{l:'25-12-13',s:0},
+  {l:'25-12-20',s:0},{l:'25-12-27',s:0},{l:'26-01-03',s:161},{l:'26-01-10',s:95},{l:'26-01-17',s:87},
+  {l:'26-01-24',s:0},{l:'26-01-31',s:202},{l:'26-02-07',s:192},{l:'26-02-14',s:0},{l:'26-02-21',s:0},
+  {l:'26-02-28',s:161},{l:'26-03-07',s:0},{l:'26-03-14',s:0},{l:'26-03-21',s:10},{l:'26-03-28',s:121},
+  {l:'26-04-04',s:161},{l:'26-04-11',s:171},{l:'26-04-18',s:166},{l:'26-04-25',s:234},{l:'26-05-02',s:161},
+  {l:'26-05-09',s:187},{l:'26-05-16',s:161},{l:'26-05-23',s:0},{l:'26-05-30',s:161}
+];
+const carrW=carrRaw.map(d=>d.l), carrS=carrRaw.map(d=>d.s);
+
+// ── Bassinet weekly ──
+const bassRaw = [
+  {l:'25-08-02',s:447},{l:'25-08-09',s:384},{l:'25-08-16',s:421},{l:'25-08-23',s:452},{l:'25-08-30',s:364},
+  {l:'25-09-06',s:442},{l:'25-09-13',s:301},{l:'25-09-20',s:254},{l:'25-09-27',s:312},{l:'25-10-04',s:228},
+  {l:'25-10-11',s:243},{l:'25-10-18',s:239},{l:'25-10-25',s:213},{l:'25-11-01',s:265},{l:'25-11-08',s:223},
+  {l:'25-11-15',s:296},{l:'25-11-22',s:245},{l:'25-11-29',s:136},{l:'25-12-06',s:0},{l:'25-12-13',s:0},
+  {l:'25-12-20',s:0},{l:'25-12-27',s:0},{l:'26-01-03',s:197},{l:'26-01-10',s:254},{l:'26-01-17',s:270},
+  {l:'26-01-24',s:254},{l:'26-01-31',s:192},{l:'26-02-07',s:202},{l:'26-02-14',s:190},{l:'26-02-21',s:202},
+  {l:'26-02-28',s:228},{l:'26-03-07',s:166},{l:'26-03-14',s:223},{l:'26-03-21',s:187},{l:'26-03-28',s:0},
+  {l:'26-04-04',s:161},{l:'26-04-11',s:182},{l:'26-04-18',s:171},{l:'26-04-25',s:206},{l:'26-05-02',s:192},
+  {l:'26-05-09',s:161},{l:'26-05-16',s:187},{l:'26-05-23',s:0},{l:'26-05-30',s:223}
+];
+const bassW=bassRaw.map(d=>d.l), bassS=bassRaw.map(d=>d.s);
+
+// ── Charts ──
+function makeLine(canvasId,labels,datasets){
+  return new Chart(document.getElementById(canvasId),{type:'line',data:{labels,datasets},options:{responsive:true,
+    plugins:{legend:{position:'bottom',labels:{boxWidth:12}}},
+    scales:{x:{grid:{display:false},ticks:{maxTicksLimit:22,font:{size:9}}},y:{title:{display:true,text:'周搜索量'},beginAtZero:true}}}})
+}
+
+makeLine('chartBikeWeekly',bikeW,[{label:'周搜索量',data:bikeS,borderColor:C1,backgroundColor:C1+'22',tension:0.2,borderWidth:2,pointRadius:1.5,fill:true}]);
+makeLine('chartCarrierWeekly',carrW,[{label:'周搜索量',data:carrS,borderColor:C4,backgroundColor:C4+'22',tension:0.2,borderWidth:2,pointRadius:1.5,fill:true}]);
+makeLine('chartBassinetWeekly',bassW,[{label:'周搜索量',data:bassS,borderColor:C5,backgroundColor:C5+'22',tension:0.2,borderWidth:2,pointRadius:1.5,fill:true}]);
+
+// Tricycle
+new Chart(document.getElementById('chartTriWeekly'),{type:'bar',data:{labels:['25-12-27','26-05-23','其余50周'],
+  datasets:[{label:'周搜索量',data:[140,202,0],backgroundColor:[C3+'88',C3,'#eee'],borderRadius:4}]},
+  options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{title:{display:true,text:'周搜索量'},beginAtZero:true,max:250}}}})
+
+// Scooter — all zeros + 1 bar
+new Chart(document.getElementById('chartScooterABA'),{type:'bar',data:{labels:['25-05-31',...Array(50).fill(''),'26-05-30'],
+  datasets:[{label:'周搜索量',data:[...Array(51).fill(0),161],backgroundColor:'#ddd',borderRadius:1}]},
+  options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{display:false}},y:{title:{display:true,text:'周搜索量'},beginAtZero:true,max:200}}}})
+
+// Tent — all zeros
+new Chart(document.getElementById('chartTentABA'),{type:'bar',data:{labels:[...Array(52).fill('')],
+  datasets:[{label:'周搜索量',data:Array(52).fill(0),backgroundColor:'#eee',borderRadius:0}]},
+  options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{display:false}},y:{title:{display:true,text:'周搜索量'},beginAtZero:true,max:10}}}})
+
+// All overlay
+makeLine('chartAllWeekly',bikeW,[
+  {label:'5-in-1 Bike',data:bikeS,borderColor:C1,tension:0.2,borderWidth:2,pointRadius:0.5},
+  {label:'Baby Carrier',data:carrS,borderColor:C4,tension:0.2,borderWidth:2,pointRadius:0.5},
+  {label:'Bassinet',data:bassS,borderColor:C5,tension:0.2,borderWidth:2,pointRadius:0.5}
+]);
+
+// Bike table
+document.getElementById('bikeTable').innerHTML =
+  `<thead><tr><th>周 (周六)</th><th>ABA 排名</th><th>周搜索量</th></tr></thead><tbody>${
+  bikeRaw.slice(-12).map(d=>`<tr><td>${d.l}</td><td>${d.r||'—'}</td><td>${d.s}</td></tr>`).join('')}</tbody>`;
+</script>
+</body>
+</html>
