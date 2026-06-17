@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>品牌搜索排名分析 — besrey / kriddo / newyoo / tinyland / grownsy / momcozy</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
+<style>
+:root { color-scheme: light; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f7fa; color: #1a1a2e; padding: 20px; }
+h1 { text-align: center; font-size: 24px; margin-bottom: 4px; color: #16213e; }
+.subtitle { text-align: center; color: #666; margin-bottom: 28px; font-size: 14px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(560px, 1fr)); gap: 20px; margin-bottom: 20px; }
+.grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 20px; margin-bottom: 20px; }
+.card { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+.card h2 { font-size: 15px; color: #333; margin-bottom: 12px; font-weight: 600; }
+.card.full { grid-column: 1 / -1; }
+.chart-wrap { position: relative; width: 100%; }
+.chart-wrap canvas { width: 100% !important; }
+.colors { --c-besrey: #FF6384; --c-kriddo: #36A2EB; --c-newyoo: #FFCE56; --c-tinyland: #4BC0C0; --c-grownsy: #9966FF; --c-momcozy: #FF9F40; }
+.metric-row { display: flex; flex-wrap: wrap; gap: 12px; }
+.metric { flex: 1; min-width: 140px; background: #f8f9fc; border-radius: 8px; padding: 14px; text-align: center; }
+.metric .val { font-size: 22px; font-weight: 700; }
+.metric .lbl { font-size: 11px; color: #888; margin-top: 4px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { padding: 8px 10px; text-align: right; border-bottom: 1px solid #eee; }
+th:first-child, td:first-child { text-align: left; font-weight: 600; }
+th { background: #f8f9fc; color: #555; font-weight: 600; font-size: 11px; text-transform: uppercase; }
+tr:hover { background: #f0f4ff; }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+.tag-up { background: #e6f7e6; color: #1a7a1a; }
+.tag-down { background: #fde8e8; color: #b91c1c; }
+.tag-neutral { background: #eee; color: #666; }
+.note { font-size: 12px; color: #999; margin-top: 16px; line-height: 1.6; }
+.summary-box { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; padding: 20px 24px; border-radius: 12px; margin-bottom: 20px; }
+.summary-box h2 { color: #fff; margin-bottom: 10px; }
+.summary-box p { font-size: 14px; line-height: 1.7; opacity: 0.92; }
+.brand-legend { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-bottom: 16px; }
+.brand-legend span { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; }
+.brand-dot { width: 12px; height: 12px; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<h1>🔍 品牌搜索排名分析报告</h1>
+<p class="subtitle">美国站 · 近一年(2025.06 – 2026.05) · 品牌: besrey / kriddo / newyoo / tinyland / grownsy / momcozy &nbsp;|&nbsp; 数据来源: 卖家精灵</p>
+
+<div class="summary-box">
+  <h2>📊 核心发现</h2>
+  <p>
+    <strong>momcozy</strong> 以月均 215,663 次搜索量绝对领先，是第二名 grownsy (12,236) 的 <strong>17.6 倍</strong>，但购买率仅 0.43%，属于"大流量低转化"品牌。<br>
+    <strong>grownsy</strong> 以 <strong>6.62%</strong> 的购买率一骑绝尘，远超其他品牌的 0.3%-1.4%，是转化效率最强的品牌。<br>
+    <strong>tinyland</strong> 搜索量呈明显季节性波动(11月峰值 17k+)，PPC 竞价仅 $1.18 为最低，广告获客成本优势突出。<br>
+    <strong>newyoo</strong> 近3月搜索量快速增长(2,050→2,225→2,181)，月度同比增长 43%，是增长势头最好的品牌。<br>
+    <strong>kriddo</strong> 和 <strong>besrey</strong> 搜索量均在 500-1700 区间波动，besrey 近三月持续下滑(-9.7%)。
+  </p>
+</div>
+
+<!-- 月度搜索量趋势 -->
+<div class="grid">
+  <div class="card full">
+    <h2>📈 月度搜索量趋势 (近12个月)</h2>
+    <div class="brand-legend">
+      <span><span class="brand-dot" style="background:#FF6384"></span> besrey</span>
+      <span><span class="brand-dot" style="background:#36A2EB"></span> kriddo</span>
+      <span><span class="brand-dot" style="background:#FFCE56"></span> newyoo</span>
+      <span><span class="brand-dot" style="background:#4BC0C0"></span> tinyland</span>
+      <span><span class="brand-dot" style="background:#9966FF"></span> grownsy</span>
+      <span><span class="brand-dot" style="background:#FF9F40"></span> momcozy (右轴)</span>
+    </div>
+    <div class="chart-wrap"><canvas id="chartMonthly" height="320"></canvas></div>
+  </div>
+</div>
+
+<!-- 月度购买量趋势 -->
+<div class="grid">
+  <div class="card full">
+    <h2>🛒 月度购买量趋势</h2>
+    <div class="chart-wrap"><canvas id="chartPurchases" height="300"></canvas></div>
+  </div>
+</div>
+
+<!-- 品牌指标对比 -->
+<div class="grid-3">
+  <div class="card">
+    <h2>🔢 五月搜索量对比</h2>
+    <div class="chart-wrap"><canvas id="chartSearchBar" height="260"></canvas></div>
+  </div>
+  <div class="card">
+    <h2>📊 购买率对比</h2>
+    <div class="chart-wrap"><canvas id="chartPurchaseRate" height="260"></canvas></div>
+  </div>
+  <div class="card">
+    <h2>💰 PPC 竞价 & 均价对比</h2>
+    <div class="chart-wrap"><canvas id="chartPpc" height="260"></canvas></div>
+  </div>
+</div>
+
+<!-- 竞争格局 -->
+<div class="grid">
+  <div class="card">
+    <h2>🏆 竞争格局总览 — 供需比 vs 商品数</h2>
+    <div class="chart-wrap"><canvas id="chartCompetition" height="280"></canvas></div>
+  </div>
+  <div class="card">
+    <h2>🎯 点击集中度 vs 购买率 (气泡图)</h2>
+    <div class="chart-wrap"><canvas id="chartBubble" height="280"></canvas></div>
+  </div>
+</div>
+
+<!-- 核心指标表格 -->
+<div class="grid">
+  <div class="card full">
+    <h2>📋 品牌核心指标总览 (2026年5月)</h2>
+    <div style="overflow-x:auto">
+      <table id="metricTable"></table>
+    </div>
+  </div>
+</div>
+
+<!-- 搜索增长率趋势 -->
+<div class="grid">
+  <div class="card full">
+    <h2>📉 近3月搜索增长率趋势</h2>
+    <div class="chart-wrap"><canvas id="chartGrowth" height="280"></canvas></div>
+  </div>
+</div>
+
+<!-- 年度同比增长 -->
+<div class="grid">
+  <div class="card">
+    <h2>📅 年度同比增长率变化</h2>
+    <div class="chart-wrap"><canvas id="chartYoY" height="280"></canvas></div>
+  </div>
+  <div class="card">
+    <h2>🔵 品牌搜索量占比 (饼图)</h2>
+    <div class="chart-wrap"><canvas id="chartPie" height="280"></canvas></div>
+  </div>
+</div>
+
+<p class="note">
+  <strong>数据来源:</strong> 卖家精灵 MCP — ABA Research Trend (周度), Keyword Research Trends (月度), Keyword Miner, Keyword Research<br>
+  <strong>时间范围:</strong> 2025年6月 – 2026年5月 (月度趋势), 2026年5月 (核心指标快照)<br>
+  <strong>站点:</strong> Amazon US 美国站 &nbsp;|&nbsp; <strong>生成时间:</strong> 2026年6月9日<br>
+  <strong>指标说明:</strong> 供需比 = 搜索量/商品数; SPR = 搜索购买比; 点击集中度 = 前三名 ASIN 点击占比; PPC竞价 = 建议竞价区间中值
+</p>
+
+<script>
+// ── 品牌颜色 ──
+const COLORS = ['#FF6384','#36A2EB','#FFCE56','#4BC0C0','#9966FF','#FF9F40'];
+const BRANDS = ['besrey','kriddo','newyoo','tinyland','grownsy','momcozy'];
+const MONTHS = ['25-06','25-07','25-08','25-09','25-10','25-11','25-12','26-01','26-02','26-03','26-04','26-05'];
+
+// ── 月度搜索量 (2025-06 至 2026-05) ──
+const monthlySearches = {
+  besrey:   [756,  500,  500,  754,  527,  504,  566,  356,    0,  632,  607,  548],
+  kriddo:   [1620, 1555, 1673, 1557, 1169, 1635, 1382,  471,  668,  848, 1157, 1158],
+  newyoo:   [1284, 1420, 1504, 1429, 1472, 1342,  956,  616, 1156, 2050, 2225, 2181],
+  tinyland: [2806, 4548, 4461, 4731, 5934, 17354,9903, 4603, 4269, 5381, 4906, 4697],
+  grownsy:  [7598, 9082, 9941,10739, 9637,10882, 8768,13308,14094,15418,15276,12236],
+  momcozy:  [172510,237385,181485,192907,186089,190931,139454,207342,237325,239646,234323,215663]
+};
+
+// ── 月度购买量 ──
+const monthlyPurchases = {
+  besrey:   [10, 25, 17, 40,  3,  2,  4,  1,  0,  6,  4,  6],
+  kriddo:   [142,60, 60, 70,  5,  6,  5,  3,  7,  8, 13,  6],
+  newyoo:   [17, 19, 86, 78, 20, 18, 13,  8, 15, 27, 30, 29],
+  tinyland: [24, 40,101,278, 52,152, 87, 40, 37, 47, 43, 41],
+  grownsy:  [493,612,658,683,616,696,596,892,896,946,971,810],
+  momcozy:  [741,1020,943,1003,800,821,599,891,1020,1030,1007,927]
+};
+
+// ── 月度同比增长率 ──
+const monthlyYoY = {
+  besrey:   [-18,-60,-59,-38,-56,-56,-38,-42,-100,-51,-30,-20],
+  kriddo:   [-5, -9, 20,-18,-25,  4,-26,-50,-29,-51,-29,-32],
+  newyoo:   [-14, -9, -6,-16,-30, -8,-34,-16, 24,  6, 37, 43],
+  tinyland: [ 1, -13, -3, 49, 41,103, 64, 57, 34, 49, 63, 86],
+  grownsy:  [183,140,191,177,155,225,182,155,149,133,141, 83],
+  momcozy:  [25,  66, 41, 41, 29, 47, 40, 33, 53, 42, 57, 20]
+};
+
+// ── Chart.js 全局 ──
+Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, sans-serif';
+Chart.defaults.font.size = 12;
+
+// ── 图表1: 月度搜索量趋势(双轴) ──
+new Chart(document.getElementById('chartMonthly'), {
+  type: 'line',
+  data: {
+    labels: MONTHS,
+    datasets: [
+      { label:'besrey',   data:monthlySearches.besrey,   borderColor:COLORS[0], backgroundColor:'transparent', tension:0.3, borderWidth:2, pointRadius:3 },
+      { label:'kriddo',   data:monthlySearches.kriddo,   borderColor:COLORS[1], backgroundColor:'transparent', tension:0.3, borderWidth:2, pointRadius:3 },
+      { label:'newyoo',   data:monthlySearches.newyoo,   borderColor:COLORS[2], backgroundColor:'transparent', tension:0.3, borderWidth:2, pointRadius:3 },
+      { label:'tinyland', data:monthlySearches.tinyland, borderColor:COLORS[3], backgroundColor:'transparent', tension:0.3, borderWidth:2, pointRadius:3 },
+      { label:'grownsy',  data:monthlySearches.grownsy,  borderColor:COLORS[4], backgroundColor:'transparent', tension:0.3, borderWidth:2, pointRadius:3 },
+      { label:'momcozy',  data:monthlySearches.momcozy,  borderColor:COLORS[5], backgroundColor:'transparent', tension:0.3, borderWidth:2, pointRadius:3, yAxisID:'y1', borderDash:[4,3] }
+    ]
+  },
+  options: {
+    responsive:true,
+    interaction:{mode:'index',intersect:false},
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{grid:{display:false}},
+      y:{title:{display:true,text:'搜索量 (besrey/kriddo/newyoo/tinyland/grownsy)'}, beginAtZero:true },
+      y1:{position:'right',title:{display:true,text:'momcozy 搜索量'}, beginAtZero:true, grid:{display:false}}
+    }
+  }
+});
+
+// ── 图表2: 月度购买量 ──
+new Chart(document.getElementById('chartPurchases'), {
+  type: 'line',
+  data: {
+    labels: MONTHS,
+    datasets: BRANDS.map((b,i) => ({
+      label:b, data:monthlyPurchases[b], borderColor:COLORS[i], backgroundColor:'transparent',
+      tension:0.3, borderWidth:2, pointRadius:3,
+      ...(b==='momcozy'?{yAxisID:'y1',borderDash:[4,3]}:{})
+    }))
+  },
+  options: {
+    responsive:true,
+    interaction:{mode:'index',intersect:false},
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{grid:{display:false}},
+      y:{title:{display:true,text:'购买量 (besrey/kriddo/newyoo/tinyland/grownsy)'}, beginAtZero:true},
+      y1:{position:'right',title:{display:true,text:'momcozy 购买量'}, beginAtZero:true, grid:{display:false}}
+    }
+  }
+});
+
+// ── 图表3: 五月搜索量柱状图 ──
+const maySearches = [548,1158,2181,4697,12236,215663];
+new Chart(document.getElementById('chartSearchBar'), {
+  type: 'bar',
+  data: {
+    labels: BRANDS,
+    datasets: [{
+      data: maySearches,
+      backgroundColor: COLORS,
+      borderRadius: 6
+    }]
+  },
+  options: {
+    responsive:true,
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{grid:{display:false}},
+      y:{title:{display:true,text:'月搜索量'}, beginAtZero:true}
+    }
+  }
+});
+
+// ── 图表4: 购买率 ──
+const purchaseRates = [1.10, 0.57, 1.36, 0.88, 6.62, 0.43];
+new Chart(document.getElementById('chartPurchaseRate'), {
+  type: 'bar',
+  data: {
+    labels: BRANDS,
+    datasets: [{
+      label:'购买率 %',
+      data: purchaseRates,
+      backgroundColor: COLORS.map(c => c+'99'),
+      borderColor: COLORS,
+      borderWidth: 2,
+      borderRadius: 6
+    }]
+  },
+  options: {
+    responsive:true,
+    plugins:{
+      legend:{display:false},
+      tooltip:{callbacks:{label:ctx=>ctx.raw+'%'}}
+    },
+    scales:{
+      x:{grid:{display:false}},
+      y:{title:{display:true,text:'购买率 %'}, beginAtZero:true}
+    }
+  }
+});
+
+// ── 图表5: PPC竞价 & 均价 ──
+new Chart(document.getElementById('chartPpc'), {
+  type: 'bar',
+  data: {
+    labels: BRANDS,
+    datasets: [
+      { label:'PPC竞价($)', data:[1.83,2.25,2.95,1.18,2.52,2.31], backgroundColor:COLORS.map(c=>c+'88'), borderRadius:6 },
+      { label:'均价($)', data:[53.99,49.99,89.99,75.99,89.99,169.99], backgroundColor:'#ddd', borderRadius:6 }
+    ]
+  },
+  options: {
+    responsive:true,
+    plugins:{legend:{position:'bottom',labels:{boxWidth:12,padding:12}}},
+    scales:{
+      x:{grid:{display:false}},
+      y:{title:{display:true,text:'USD ($)'}, beginAtZero:true}
+    }
+  }
+});
+
+// ── 图表6: 供需比 vs 商品数 ──
+new Chart(document.getElementById('chartCompetition'), {
+  type: 'scatter',
+  data: {
+    datasets: BRANDS.map((b,i) => ({
+      label:b,
+      data:[{x:[14.42,20.68,21.17,42.70,88.67,197.67][i], y:[38,56,103,110,138,1091][i]}],
+      backgroundColor:COLORS[i],
+      borderColor:COLORS[i],
+      pointRadius:10, pointHoverRadius:14
+    }))
+  },
+  options: {
+    responsive:true,
+    plugins:{
+      legend:{position:'bottom',labels:{boxWidth:10,padding:10,usePointStyle:true}},
+      tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: 供需比=${ctx.parsed.x}, 商品数=${ctx.parsed.y}`}}
+    },
+    scales:{
+      x:{title:{display:true,text:'供需比 (搜索量/商品数) →'}, type:'logarithmic'},
+      y:{title:{display:true,text:'商品数 →'}, type:'logarithmic'}
+    }
+  }
+});
+
+// ── 图表7: 气泡图 — 点击集中度 vs 购买率 ──
+new Chart(document.getElementById('chartBubble'), {
+  type: 'bubble',
+  data: {
+    datasets: BRANDS.map((b,i) => ({
+      label:b,
+      data:[{x:[58.34,53.31,56.44,25.29,41.04,20.08][i], y:purchaseRates[i], r:[548,1158,2181,4697,12236,215663][i]/3000}],
+      backgroundColor:COLORS[i]+'88',
+      borderColor:COLORS[i],
+      borderWidth:2
+    }))
+  },
+  options: {
+    responsive:true,
+    plugins:{
+      legend:{position:'bottom',labels:{boxWidth:10,padding:10,usePointStyle:true}},
+      tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: 点击集中度=${ctx.parsed.x}%, 购买率=${ctx.parsed.y}%, 搜索量≈${Math.round(ctx.raw.r*3000)}`}}
+    },
+    scales:{
+      x:{title:{display:true,text:'点击集中度 % (前三ASIN点击占比)'}, beginAtZero:true},
+      y:{title:{display:true,text:'购买率 %'}, beginAtZero:true}
+    }
+  }
+});
+
+// ── 图表8: 近3月搜索增长率 ──
+const growthRates = {
+  besrey:   [-9.7, -19.9,  -9.7],
+  kriddo:   [0.09, -32.3,   0.09],
+  newyoo:   [-2.0,  43.2,  -2.0],
+  tinyland: [-8.8,  86.0,  -8.8],
+  grownsy:  [-19.9, 82.9, -19.9],
+  momcozy:  [-8.0,  19.8,  -8.0]
+};
+new Chart(document.getElementById('chartGrowth'), {
+  type: 'bar',
+  data: {
+    labels: BRANDS,
+    datasets: [
+      { label:'3月增长率 %', data:BRANDS.map(b=>growthRates[b][0]), backgroundColor:COLORS.map(c=>c+'AA'), borderRadius:6 },
+      { label:'月同比 %', data:BRANDS.map(b=>growthRates[b][1]), backgroundColor:COLORS.map(c=>c+'55'), borderRadius:6 }
+    ]
+  },
+  options: {
+    responsive:true,
+    plugins:{legend:{position:'bottom',labels:{boxWidth:12,padding:12}}},
+    scales:{
+      x:{grid:{display:false}},
+      y:{title:{display:true,text:'%'}}
+    }
+  }
+});
+
+// ── 图表9: 年度同比增长 ──
+new Chart(document.getElementById('chartYoY'), {
+  type: 'bar',
+  data: {
+    labels: MONTHS,
+    datasets: BRANDS.map((b,i) => ({
+      label:b, data:monthlyYoY[b], backgroundColor:COLORS[i]+'66', borderColor:COLORS[i], borderWidth:1,
+      hidden: (b==='besrey'||b==='kriddo') // 默认折叠小品牌
+    }))
+  },
+  options: {
+    responsive:true,
+    plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:8}}},
+    scales:{
+      x:{grid:{display:false}},
+      y:{title:{display:true,text:'同比增长率 %'}}
+    }
+  }
+});
+
+// ── 图表10: 饼图 — 搜索量占比 (去除momcozy看小品牌) ──
+new Chart(document.getElementById('chartPie'), {
+  type: 'doughnut',
+  data: {
+    labels: BRANDS,
+    datasets: [{
+      data: maySearches,
+      backgroundColor: COLORS,
+      borderWidth: 2,
+      borderColor: '#fff'
+    }]
+  },
+  options: {
+    responsive:true,
+    plugins:{
+      legend:{position:'bottom',labels:{boxWidth:10,padding:10,usePointStyle:true}},
+      tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${ctx.raw.toLocaleString()} (${(ctx.raw/236483*100).toFixed(1)}%)`}}
+    }
+  }
+});
+
+// ── 核心指标表格 ──
+const tableData = [
+  {brand:'besrey',  search:548,   purch:6,   rate:'1.10%', products:38,   sdr:14.42, price:'$53.99', rating:'4.5', reviews:2051, bid:'$1.83', mcr:'58.3%', growth:'-9.7%', yoy:'-20%'},
+  {brand:'kriddo',  search:1158,  purch:7,   rate:'0.57%', products:56,   sdr:20.68, price:'$49.99', rating:'4.5', reviews:5460, bid:'$2.25', mcr:'53.3%', growth:'+0.1%', yoy:'-32%'},
+  {brand:'newyoo',  search:2181,  purch:30,  rate:'1.36%', products:103,  sdr:21.17, price:'$89.99', rating:'4.5', reviews:4611, bid:'$2.95', mcr:'56.4%', growth:'-2.0%', yoy:'+43%'},
+  {brand:'tinyland',search:4697,  purch:41,  rate:'0.88%', products:110,  sdr:42.70, price:'$75.99', rating:'4.5', reviews:426,  bid:'$1.18', mcr:'25.3%', growth:'-8.8%', yoy:'+86%'},
+  {brand:'grownsy', search:12236, purch:810, rate:'6.62%', products:138,  sdr:88.67, price:'$89.99', rating:'4.5', reviews:1262, bid:'$2.52', mcr:'41.0%', growth:'-19.9%',yoy:'+83%'},
+  {brand:'momcozy', search:215663,purch:927, rate:'0.43%', products:1091, sdr:197.67,price:'$169.99',rating:'4.4', reviews:3491, bid:'$2.31', mcr:'20.1%', growth:'-8.0%', yoy:'+20%'}
+];
+
+const tbody = tableData.map(d => `
+  <tr>
+    <td style="font-weight:700;color:${COLORS[tableData.indexOf(d)]}">${d.brand}</td>
+    <td>${d.search.toLocaleString()}</td><td>${d.purch}</td><td>${d.rate}</td>
+    <td>${d.products}</td><td>${d.sdr}</td><td>${d.price}</td>
+    <td>${d.rating}</td><td>${d.reviews.toLocaleString()}</td>
+    <td>${d.bid}</td><td>${d.mcr}</td>
+    <td><span class="tag ${d.growth.startsWith('+')?'tag-up':d.growth.startsWith('-')?'tag-down':'tag-neutral'}">${d.growth}</span></td>
+    <td><span class="tag ${d.yoy.startsWith('+')?'tag-up':d.yoy.startsWith('-')?'tag-down':'tag-neutral'}">${d.yoy}</span></td>
+  </tr>`).join('');
+
+document.getElementById('metricTable').innerHTML = `
+<thead><tr>
+  <th>品牌</th><th>月搜索量</th><th>月购买量</th><th>购买率</th><th>商品数</th><th>供需比</th><th>均价</th><th>评分</th><th>评论数</th><th>PPC竞价</th><th>点击集中度</th><th>3月增长率</th><th>同比增长</th>
+</tr></thead><tbody>${tbody}</tbody>`;
+</script>
+
+</body>
+</html>
